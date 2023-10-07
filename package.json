@@ -1,34 +1,72 @@
-{
-  "name": "minekhan",
-  "version": "1.0.0",
-  "description": "Minecraft for Khan Academy",
-  "main": "index.js",
-  "scripts": {
-    "watch": "webpack --watch",
-    "build": "webpack"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Willard21/MineKhan.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Willard21/MineKhan/issues"
-  },
-  "homepage": "https://github.com/Willard21/MineKhan#readme",
-  "devDependencies": {
-    "eslint": "^8.21.0",
-    "html-inline-script-webpack-plugin": "^3.1.0",
-    "html-webpack-plugin": "^5.5.0",
-    "webpack": "^5.74.0",
-    "css-loader": "^5.2.1",
-    "raw-loader": "^4.0.2",
-    "style-loader": "^2.0.0",
-    "webpack-cli": "^4.6.0"
-  },
-  "dependencies": {
-    "express": "^4.18.1"
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+const fs = require("fs");
+
+const isDevelopment = process.env.NODE_ENV === "development";
+
+// Define output paths based on environment
+const outputPaths = {
+  development: "./dist",
+  production: "./build", // Adjust as needed
+};
+
+// Determine the outputPath based on the environment and directory
+let outputPath = isDevelopment
+  ? outputPaths.development
+  : outputPaths.production;
+
+if (isDevelopment) {
+  // Check for specific development environment conditions
+  if (__dirname.includes("willard/server/dev")) {
+    outputPath = "../../public/minekhan/beta";
+  } else if (__dirname.includes("/home/willard/Desktop/MineKhan")) {
+    const vpsPath = "/home/willard/vps";
+    if (fs.existsSync(vpsPath) && fs.readdirSync(vpsPath).includes("server")) {
+      outputPath = path.join(vpsPath, "server", "public", "minekhan", "beta");
+    }
   }
 }
+
+module.exports = {
+  mode: isDevelopment ? "development" : "production",
+  entry: "./src/main.js",
+  output: {
+    path: path.resolve(__dirname, outputPath),
+    filename: "main.js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(txt|glsl)$|workers\//i,
+        use: "raw-loader",
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      inject: "body",
+    }),
+  ],
+  watch: isDevelopment,
+  watchOptions: {
+    aggregateTimeout: 100,
+    ignored: "**/node_modules",
+  },
+  devtool: isDevelopment ? "eval-source-map" : false,
+  optimization: {
+    minimize: !isDevelopment,
+  },
+  performance: {
+    hints: isDevelopment ? "warning" : "error",
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, outputPath),
+    compress: true,
+    port: 9000,
+  },
+};
