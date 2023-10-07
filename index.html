@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Play creative mode Minecraft right from your browser!">
+    <meta name="keywords" content="Khan Academy, Programs, Search">
+    <meta property="og:title" content="MineKhan"/>
+    <meta property="og:description" content="Play creative mode Minecraft right from your browser!"/>
+    <meta property="og:image" content="https://www.khanacademy.org/computer-programming/minekhan/5647155001376768/5308848032661504.png">
+    <title>MineKhan</title>
+    <link rel="preload" href="https://willard.fun/fonts/VT323.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="shortcut icon" type="image/ico" href="https://willard.fun/assets/minekhan.ico">
+</head>
+<body>
+    <div id="background-text">
+        <h1>MineKhan</h1>
+        <p>Play MineKhan online! This game is a free Minecraft clone developed on <a href="https://www.khanacademy.org/computer-programming/minekhan/5647155001376768">Khan Academy</a>, and later moved to my own website so that I could take advantage of multiplayer servers. The front-end code is completely open source and maintained on <a href="https://github.com/Willard21/MineKhan">GitHub</a>, where contributions are welcome.</p>
+    </div>
+    <canvas id="overlay" tabindex="0" width="600" height="600" style="position: absolute; top: 0px; left: 0px"></canvas>
+    <input type="text" id="savebox" class="hidden" spellcheck="false" style="position: absolute; top: 10px; left: 10px; z-index: 1;">
+    <input type="text" id="boxcentertop" class="hidden" spellcheck="false">
+    <div id="quota" class="hidden"></div>
+    <div id="onhover" class="hidden"></div>
+    <div id="chat" class="hidden"></div>
+    <input id="chatbar" class="hidden" list="commands">
+    <datalist id="commands">
+        <option>/ban</option>
+        <option>/online</option>
+    </datalist>
+    <p id="savedirections" class="hidden" style="position: absolute; top: 40px; left: 10px; z-index: 1; background-color: rgba(255, 255, 255, 0.3);">
+        To share your world on KA, copy/paste the saveString<br>
+        from this box into the code on line 190.<br>
+        var loadString = "Your Code Here";<br>
+        Then save the program as a Spin-off.
+    </p>
+    <div class="world-select hidden" id="worlds"></div>
+    <p id="message" class="hidden" style="position: absolute; top: 10px; right: 10px; z-index: 1; text-align: right; background-color: rgba(255, 255, 255, 0.3);"></p>
+    <span class="hidden" id="loading-text"></span>
+    <div id="inv-container" class="hidden">
+        <canvas id="inventory" height="1000"></canvas>
+    </div>
+    <script>
+        // Function to create a hollow cylinder
+function hcyl(bottom, height, radius, id) {
+  let radsq = radius * radius;
+  let innerRadsq = (radius - 1.2) * (radius - 1.2);
+  height += bottom;
+  for (let x = -radius; x <= radius; x++) {
+    for (let y = bottom; y < height; y++) {
+      for (let z = -radius; z <= radius; z++) {
+        let d = x * x + z * z;
+        if (d < radsq && d >= innerRadsq) {
+          world.setBlock(p2.x + x, p2.y + y, p2.z + z, id);
+        }
+      }
+    }
+  }
+}
 
+// Function to create a solid cylinder
+function cyl(bottom, height, radius, id) {
+  let radsq = radius * radius;
+  height += bottom;
+  for (let x = -radius; x <= radius; x++) {
+    for (let y = bottom; y < height; y++) {
+      for (let z = -radius; z <= radius; z++) {
+        let d = x * x + z * z;
+        if (d < radsq) {
+          world.setBlock(p2.x + x, p2.y + y, p2.z + z, id);
+        }
+      }
+    }
+  }
+}
+
+// Function to create a sphereoid
+function sphereoid(w, h, d, id) {
+  let w2 = w * w;
+  let h2 = h * h;
+  let d2 = d * d;
+  let w3 = (w - 1.5) * (w - 1.5);
+  let h3 = (h - 1.5) * (h - 1.5);
+  let d3 = (d - 1.5) * (d - 1.5);
+
+  for (let y = -h; y < h; y++) {
+    for (let x = -w; x <= w; x++) {
+      for (let z = -d; z <= d; z++) {
+        let n = x * x / w2 + y * y / h2 + z * z / d2;
+        let n2 = x * x / w3 + y * y / h3 + z * z / d3;
+        if (n < 1 && n2 >= 1) {
+          world.setBlock(p2.x + x, p2.y + y, p2.z + z, id);
+        }
+      }
+    }
+  }
+}
+
+// Function to create a sphereoid with animation
+async function asphereoid(w, h, d, id) {
+  let px = p2.x;
+  let py = p2.y;
+  let pz = p2.z;
+  let w2 = w * w;
+  let h2 = h * h;
+  let d2 = d * d;
+  let w3 = (w - 1.5) * (w - 1.5);
+  let h3 = (h - 1.5) * (h - 1.5);
+  let d3 = (d - 1.5) * (d - 1.5);
+
+  for (let y = -h; y < h; y++) {
+    for (let x = -w; x <= w; x++) {
+      for (let z = -d; z <= d; z++) {
+        let n = x * x / w2 + y * y / h2 + z * z / d2;
+        let n2 = x * x / w3 + y * y / h3 + z * z / d3;
+        if (n < 1 && n2 >= 1) {
+          world.setBlock(px + x, py + y, pz + z, id);
+          await sleep(10); // Add a delay for animation
+        }
+      }
+    }
+  }
+}
+
+// Function to add a delay
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(() => resolve(), ms));
+}
+
+        window.loadString = ""
+    </script>
+</body>
+</html>
