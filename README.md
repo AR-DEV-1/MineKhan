@@ -1,3 +1,6 @@
+
+# Customizing MineKhan
+# 
 # 🔨 MineKhan - Minecraft for Khan Academy
 
 Experience the magic of Minecraft in an educational setting on Khan Academy! 🌍⛏️
