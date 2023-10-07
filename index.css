@@ -1,0 +1,189 @@
+/* Reset some default styles */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Hide scrollbars */
+    background-color: black;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+}
+
+/* Improve the world selection area */
+.world-select {
+    width: 99vw;
+    min-width: 300px;
+    height: calc(100vh - 220px);
+    position: absolute;
+    bottom: 120px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.world {
+    width: 250px;
+    border: 1px solid black;
+    font-size: 18px;
+    margin-top: 15px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Highlight selected item */
+.selected {
+    border: 3px solid white;
+    padding: 3px;
+}
+
+/* Improve text input */
+input[type="text"] {
+    background-color: black;
+    caret-color: white;
+    border: 2px solid gray;
+    font-size: 24px;
+    padding-left: 12px;
+    color: white;
+    outline: none; /* Remove default input focus outline */
+}
+
+input[type="text"]:focus {
+    border: 2px solid lightgray;
+}
+
+/* Center the text input */
+#boxcentertop {
+    width: 80vw;
+    max-width: 400px;
+    height: 50px;
+    position: relative;
+    top: 30px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Make hidden elements truly hidden */
+.hidden {
+    display: none !important;
+}
+
+/* Improve the onhover tooltip */
+#onhover {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: rgb(200, 200, 200);
+    word-wrap: normal;
+    position: absolute;
+    z-index: 1;
+    padding: 10px;
+    cursor: default;
+    max-width: 400px;
+    white-space: pre-wrap;
+}
+
+/* Improve the quota display */
+#quota {
+    display: block;
+    position: absolute;
+    width: 99vw;
+    bottom: 110px;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+/* Improve the chat area */
+#chat {
+    position: absolute;
+    left: 0;
+    top: 100px;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 20px;
+    width: 40vw;
+    min-width: 600px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#chat > div > span {
+    white-space: pre-wrap;
+    margin: 0;
+    padding: 0;
+}
+
+/* Improve chat input */
+#chatbar {
+    position: absolute;
+    left: 30px;
+    bottom: 0px;
+    height: 20px;
+    width: calc(100vw - 60px);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+/* Center loading text */
+#loading-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 30px;
+}
+
+/* Improve inventory container */
+#inv-container {
+    position: absolute;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    max-height: 500px;
+    width: fit-content;
+    overflow-y: scroll;
+    padding: 0;
+}
+
+/* Define the 'VT323' font for better compatibility */
+@font-face {
+    font-family: 'VT323';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://willard.fun/fonts/VT323.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Set the background text style */
+#background-text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10;
+    font-family: 'VT323', monospace;
+}
+
+/* Customize the loading text style */
+#loading-text {
+    color: #fff;
+    font-size: 30px;
+}
+
+/* Improve the inventory container */
+#inv-container {
+    position: absolute;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    max-height: 500px;
+    width: fit-content;
+    overflow-y: scroll;
+    padding: 0;
+}
